@@ -1,0 +1,39 @@
+<html>
+<head>
+	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+	<h1> Edit Menu Item </h1>
+	<form action="{{ url_for('edititem', item_id=item_to_edit.id)}}" method = 'post'>
+		<dl>
+			<dt>Name:</dt>
+			<dd><input type ='text' size='30' name='name' placeholder = '{{item_to_edit.name}}'></dd>
+			<dt>Description:</dt>
+			<dd><textarea name = 'description' rows='5' cols='40' placeholder = '{{item_to_edit.description}}'></textarea></dd>
+			<dt>Category:</dt>
+			{% if item_to_edit.category_id == 1 %}
+			<dd><input type ='radio' name='category_id' value='1' checked>Ironman</dd>
+			{%else%}
+			<dd><input type ='radio' name='category_id' value='1' >Ironman</dd>
+			{% endif %}
+			{% if item_to_edit.category_id == 2 %}
+			<dd><input type ='radio' name='category_id' value='2' checked>Ironman 70.3</dd>
+			{%else%}
+			<dd><input type ='radio' name='category_id' value='2'>Ironman 70.3</dd>
+			{% endif %}
+			{% if item_to_edit.category_id == 3 %}
+			<dd><input type ='radio' name='category_id' value='3' checked>Spartan</dd>
+			{% else %}
+			<dd><input type ='radio' name='category_id' value='3'>Spartan</dd>
+			{% endif %}
+			{%if item_to_edit.category_id == 4 %}
+			<dd><input type ='radio' name='category_id' value='4' checked>RocknRoll</dd>
+			{% else %}
+			<dd><input type ='radio' name='category_id' value='4'>RocknRoll</dd>
+			{% endif %}
+		</dl>
+		<input type='submit' value='Edit'>
+		<a href = '{{url_for('displayitem', item_id = item_to_edit.id)}}'> Cancel </a>
+	</form>
+</body>
+</html>
