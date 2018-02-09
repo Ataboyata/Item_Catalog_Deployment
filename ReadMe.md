@@ -60,7 +60,61 @@ CHANGE PORT 22 TO 2200
 sudo nano /etc/ssh/sshd_config
 CHANGE PERMITROOTLOGIN TO "NO"
 
+## Set up Apache
+sudo apt-get install apache2
+sudo apt-get install libapache2-mod-wsgi python-dev
+sudo a2enmod wsgi
+sudo service apache2 start
+PAGE SHOULD DISPLAY THE APACHE HTML. GET THE HOSTNAME WITH http://www.hcidata.info/host2ip.cgi
 
+## Install GIT
+sudo apt-get install git
 
+## Set up folders
+cd /var/www
+sudo mkdir FlaskApp
+cd FlaskApp
+sudo git clone https://github.com/Ataboyata/Item_Catalog_Deployment FlaskApp
+
+cd /var/www
+sudo chown -R grader:grader FlaskApp
+
+## Install Flask
+sudo apt-get install python-pip 
+sudo pip install virtualenv
+sudo virtualenv venv
+source venv/bin/activate 
+sudo pip install Flask 
+sudo pip install requests
+sudo pip install oauth2client
+sudo pip install flask-httpauth
+
+## Configure the Application
+sudo nano /etc/apache2/sites-available/FlaskApp.conf
+
+ADDED THIS CONTENT:
+<VirtualHost *:80>
+                ServerName 18-218-151-163
+                ServerAdmin admin@mywebsite.com
+                WSGIScriptAlias / /var/www/FlaskApp/FlaskApp/flaskapp.wsgi
+                <Directory /var/www/FlaskApp/FlaskApp/>
+                Order allow,deny
+                Allow from all
+                </Directory>
+                Alias /static /var/www/FlaskApp/FlaskApp/static
+                <Directory /var/www/FlaskApp/FlaskApp/static/>
+                Order allow,deny
+                Allow from all
+                </Directory>
+                        ErrorLog ${APACHE_LOG_DIR}/error.log
+                        LogLevel warn
+                        CustomLog ${APACHE_LOG_DIR}/access.log combined
+ </VirtualHost>
+ 
+ 
+ 
+cd /var/www/FlaskApp/FlaskApp
+sudo nano flaskapp.wsgi
+ADDED THIS CONTENT:
 
 
