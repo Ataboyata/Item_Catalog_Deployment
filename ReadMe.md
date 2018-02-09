@@ -120,6 +120,8 @@ sudo a2ensite CatalogApp
 cd /var/www/FlaskApp/FlaskApp
 sudo nano flaskapp.wsgi
 ADDED THIS CONTENT:
+activate_this = 'venv/bin/activate_this.py'
+execfile(activate_this, dict(__file__=activate_this))
 
 #!/usr/bin/python
 import sys
@@ -147,3 +149,5 @@ python /var/www/FlaskApp/FlaskApp/database_setup.py
 python /var/www/FlaskApp/FlaskApp/lotsofitems.py
 cd /var/www/FlaskApp/FlaskApp/
 python /var/www/FlaskApp/FlaskApp/__init__.py
+
+sudo service apache2 restart
