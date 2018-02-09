@@ -65,15 +65,15 @@ item5 = Item(name="Arizona Super and Sprint Weekend", description = "February 10
 session.add(item5)
 session.commit()
 
-item6 = Item(name="South Florida Sprint Weekend", description = "The Sprint may be our shortest distance race, but it is still a favorite amongst both new and returning racers. It is the perfect distance for those looking to start their Spartan journey.", category = category3, user = user1)
+item6 = Item(name="South Florida Sprint Weekend", description = "It is the perfect distance for those looking to start their Spartan journey.", category = category3, user = user1)
 session.add(item6)
 session.commit()
 
-item7 = Item(name="New Orleans Marathon", description = "For over 20 years, the RocknRoll Marathon Series has made running fun by infusing each course with live bands, cheer teams and more. In 2018, we are bringing our best to Humana Rock n Roll New Orleans Marathon and half marathon with more music, runner support, and community engagement every step of the way. This is a fast, flat course that is complemented by historic houses, iconic landmarks, a post-race party you wont want to miss. With distances for everyone, we invite you, your friends and family to run with us in New Orleans in 2018", category = category4, user = user1)
+item7 = Item(name="New Orleans Marathon", description = "With distances for everyone, we invite you, your friends and family to run with us in New Orleans in 2018", category = category4, user = user1)
 session.add(item7)
 session.commit()
 
-item8 = Item(name="Washington DC", description = "For over 20 years, the RocknRoll Marathon Series has made running fun by infusing each course with live bands, cheer teams and more. In 2018, the United Airlines Rock n Roll Washington DC Marathon and half marathon is celebrating 7 years running, and we are bringing our best with more music, runner support, and community engagement every step of the way. This event is the biggest running festival to hit the capital city with a marathon, half, and 5K, there is something for everyone. We invite you, your friends and family to run with us in 2018!", category = category4, user =user1)
+item8 = Item(name="Washington DC", description = "This event is the biggest running festival to hit the capital city with a marathon, half, and 5K.", category = category4, user =user1)
 session.add(item8)
 session.commit()
 

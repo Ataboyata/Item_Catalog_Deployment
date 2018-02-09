@@ -55,3 +55,12 @@ CHANGE PORT 22 TO 2200
 ### 7. Configure the local timezone
  (SET TO EUROPE -> LONDON) sudo dpkg-reconfigure tzdata
  sudo apt-get install ntp
+ 
+## Block Root login
+sudo nano /etc/ssh/sshd_config
+CHANGE PERMITROOTLOGIN TO "NO"
+
+
+
+
+
