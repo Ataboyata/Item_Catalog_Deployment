@@ -83,11 +83,15 @@ sudo chown -R grader:grader FlaskApp
 sudo apt-get install python-pip 
 sudo pip install virtualenv
 sudo virtualenv venv
-source venv/bin/activate 
-sudo pip install Flask 
-sudo pip install requests
-sudo pip install oauth2client
-sudo pip install flask-httpauth
+source venv/bin/activate
+sudo chmod -R 777 venv
+pip install Flask 
+pip install requests
+pip install oauth2client
+pip install flask-httpauth
+pip install sqlalchemy
+pip install psycopg2
+pip install psycopg2-binary
 
 ## Configure the Application
 sudo nano /etc/apache2/sites-available/FlaskApp.conf
@@ -111,10 +115,35 @@ ADDED THIS CONTENT:
                         CustomLog ${APACHE_LOG_DIR}/access.log combined
  </VirtualHost>
  
- 
+sudo a2ensite CatalogApp
  
 cd /var/www/FlaskApp/FlaskApp
 sudo nano flaskapp.wsgi
 ADDED THIS CONTENT:
 
+#!/usr/bin/python
+import sys
+import logging
+logging.basicConfig(stream=sys.stderr)
+sys.path.insert(0, "/var/www/FlaskApp/")
 
+from FlaskApp import app as application
+
+## Configure PostgreSQL
+sudo apt-get install libpq-dev python-dev
+sudo apt-get install postgresql postgresql-contrib
+sudo su - postgres
+psql
+CREATE USER catalog WITH PASSWORD 'grader';
+ALTER USER catalog CREATEDB;
+CREATE DATABASE catalog WITH OWNER catalog;
+\c catalog
+REVOKE ALL ON SCHEMA public FROM public;
+GRANT ALL ON SCHEMA public TO catalog;
+\q
+exit
+
+python /var/www/FlaskApp/FlaskApp/database_setup.py
+python /var/www/FlaskApp/FlaskApp/lotsofitems.py
+cd /var/www/FlaskApp/FlaskApp/
+python /var/www/FlaskApp/FlaskApp/__init__.py
