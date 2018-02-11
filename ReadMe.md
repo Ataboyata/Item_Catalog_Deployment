@@ -1,8 +1,8 @@
-ec2-18-218-185-59.us-east-2.compute.amazonaws.com
+http://ec2-52-14-21-109.us-east-2.compute.amazonaws.com/
 # Get your server.
 ## 1. Start a new Ubuntu Linux server instance on Amazon Lightsail. 
 ## 2. Connect to instance using ssh
- ssh -i PrivateKey.pem ubuntu@13.59.157.20
+ ssh -i PrivateKey.pem ubuntu@52-14-21-109
  
 ## Secure your server
 ### 3. Updates all currently installed packages 
@@ -32,12 +32,20 @@ ec2-18-218-185-59.us-east-2.compute.amazonaws.com
  	sudo chown -R grader:grader /home/grader/.ssh
  
  TRY LOGGIN IN WITH:  
- 	ssh -i udacity_key grader@18.218.185.59
+ 	ssh -i udacity_key grader@52-14-21-109
  
 ### 8. Add the Port 2200 as a Custom TCP Port in the Lightsail webpage and changed the SSH port from 22 to 2200 Firewall in the config file. 
-ON THE LIGHTSAIL WEBSITE ADD PORT 2200 AS A CUSTOM TCP PORT. 
+ON THE LIGHTSAIL WEBSITE ADD PORT 2200 AS A CUSTOM TCP PORT. DELETE PORT SSH PORT 22.
+ON THE SSHD_CONFIG FILE CHANGE PORT 22 TO 2200
 sudo nano /etc/ssh/sshd_config
-CHANGE PORT 22 TO 2200
+sudo service ssh restart
+
+TRY LOGGIN IN WITH:  
+ssh -i udacity_key grader@52-14-21-109 -p 2200
+
+## Block Root login
+sudo nano /etc/ssh/sshd_config
+CHANGE PERMITROOTLOGIN TO "NO"
 
 ### 9. Set up all the other firewall ports
  sudo ufw default deny incoming
@@ -49,16 +57,13 @@ CHANGE PORT 22 TO 2200
  sudo ufw status
 
  TRY LOGGIN IN WITH:  
- 	ssh -i udacity_key grader@18.218.185.59 p-2200
+ 	ssh -i udacity_key grader@52-14-21-109 -p 2200
 
 ## Prepare to deplay your project
 ### 7. Configure the local timezone
  (SET TO EUROPE -> LONDON) sudo dpkg-reconfigure tzdata
  sudo apt-get install ntp
  
-## Block Root login
-sudo nano /etc/ssh/sshd_config
-CHANGE PERMITROOTLOGIN TO "NO"
 
 ## Set up Apache
 sudo apt-get install apache2
@@ -85,22 +90,14 @@ sudo pip install virtualenv
 sudo virtualenv venv
 source venv/bin/activate
 sudo chmod -R 777 venv
-pip install Flask 
-pip install requests
-pip install oauth2client
-pip install flask-httpauth
-pip install sqlalchemy
-pip install psycopg2
-pip install psycopg2-binary
+pip install Flask requests oauth2client flask-httpauth sqlalchemy psycopg2 psycopg2-binary
 
 ## Configure the Application
 sudo nano /etc/apache2/sites-available/FlaskApp.conf
 
 ADDED THIS CONTENT:
 <VirtualHost *:80>
-                ServerName 18-218-151-163
-                ServerAdmin admin@mywebsite.com
-                WSGIScriptAlias / /var/www/FlaskApp/FlaskApp/flaskapp.wsgi
+                WSGIScriptAlias / /var/www/FlaskApp/flaskapp.wsgi
                 <Directory /var/www/FlaskApp/FlaskApp/>
                 Order allow,deny
                 Allow from all
@@ -114,22 +111,22 @@ ADDED THIS CONTENT:
                         LogLevel warn
                         CustomLog ${APACHE_LOG_DIR}/access.log combined
  </VirtualHost>
- 
-sudo a2ensite CatalogApp
- 
-cd /var/www/FlaskApp/FlaskApp
-sudo nano flaskapp.wsgi
-ADDED THIS CONTENT:
-activate_this = 'venv/bin/activate_this.py'
-execfile(activate_this, dict(__file__=activate_this))
+THE FOLLOWING ENABLES THE FLASKAPP TO BE LOADED WITH APACHE
+sudo a2ensite FlaskApp
+THE FOLLOWING DISABLES THE DEFAULT APACHE PAGE
+a2dissite 000-default
 
+cd /var/www/FlaskApp/
+sudo nano flaskapp.wsgi
+
+ADDED THIS CONTENT:
 #!/usr/bin/python
 import sys
 import logging
 logging.basicConfig(stream=sys.stderr)
 sys.path.insert(0, "/var/www/FlaskApp/")
-
 from FlaskApp import app as application
+application.secret_key='super_secret_key'
 
 ## Configure PostgreSQL
 sudo apt-get install libpq-dev python-dev
@@ -145,9 +142,9 @@ GRANT ALL ON SCHEMA public TO catalog;
 \q
 exit
 
-python /var/www/FlaskApp/FlaskApp/database_setup.py
-python /var/www/FlaskApp/FlaskApp/lotsofitems.py
-cd /var/www/FlaskApp/FlaskApp/
-python /var/www/FlaskApp/FlaskApp/__init__.py
+python /var/www/FlaskApp/FlaskApp/static/database_setup.py
+python /var/www/FlaskApp/FlaskApp/static/lotsofitems.py
+cd /var/www/FlaskApp/FlaskApp/static
+python /var/www/FlaskApp/FlaskApp/static/__init__.py
 
 sudo service apache2 restart
