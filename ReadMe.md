@@ -1,7 +1,7 @@
 IP Address: 52.14.21.109
 URL: http://ec2-52-14-21-109.us-east-2.compute.amazonaws.com/
 
-# Introducion
+# Introduction
 This web app runs on an Amazon Lightsail Ubuntu instance. With an apache server and a Flask application.
 
 The following are the necessary steps that were taken to configure the web app:
@@ -31,9 +31,9 @@ The following are the necessary steps that were taken to configure the web app:
  ON REMOTE:
  sudo mkdir /home/grader/.ssh
  sudo touch /home/grader/.ssh/authorized_keys
- COPY GEN PUB KEY TO: sudo nano authorized_keys
+ COPY GENERATED PUB KEY TO: sudo nano authorized_keys
  
- Then change some permissions:
+ Then change some permissions to only allow grader user full access to files:
  	sudo chmod 700 /home/grader/.ssh
  	sudo chmod 644 /home/grader/.ssh/authorized_keys
  	sudo chown -R grader:grader /home/grader/.ssh
@@ -72,7 +72,7 @@ CHANGE PERMITROOTLOGIN TO "NO"
  sudo apt-get install ntp
  
 
-## Set up Apache
+## Install Apache and have it running with wsgi
 sudo apt-get install apache2
 sudo apt-get install libapache2-mod-wsgi python-dev
 sudo a2enmod wsgi
@@ -82,7 +82,7 @@ PAGE SHOULD DISPLAY THE APACHE HTML. GET THE HOSTNAME WITH http://www.hcidata.in
 ## Install GIT
 sudo apt-get install git
 
-## Set up folders
+## Set up the app within its own directory by downloading your own GIT repository
 cd /var/www
 sudo mkdir FlaskApp
 cd FlaskApp
@@ -91,7 +91,7 @@ sudo git clone https://github.com/Ataboyata/Item_Catalog_Deployment FlaskApp
 cd /var/www
 sudo chown -R grader:grader FlaskApp
 
-## Install Flask
+## Install Flask and Virtual Environment. Set up and activate the environment.
 sudo apt-get install python-pip 
 sudo pip install virtualenv
 sudo virtualenv venv
@@ -99,7 +99,8 @@ source venv/bin/activate
 sudo chmod -R 777 venv
 pip install Flask requests oauth2client flask-httpauth sqlalchemy psycopg2 psycopg2-binary
 
-## Configure the Application
+## Configure the Application.
+### Add the conf file so that Apache knows where it can take the available sites
 sudo nano /etc/apache2/sites-available/FlaskApp.conf
 
 ADDED THIS CONTENT:
@@ -149,6 +150,7 @@ GRANT ALL ON SCHEMA public TO catalog;
 \q
 exit
 
+### Finish creating the database and load it with premade items.
 python /var/www/FlaskApp/FlaskApp/static/database_setup.py
 python /var/www/FlaskApp/FlaskApp/static/lotsofitems.py
 cd /var/www/FlaskApp/FlaskApp/static
