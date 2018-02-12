@@ -1,4 +1,11 @@
-http://ec2-52-14-21-109.us-east-2.compute.amazonaws.com/
+IP Address: 52.14.21.109
+URL: http://ec2-52-14-21-109.us-east-2.compute.amazonaws.com/
+
+# Introducion
+This web app runs on an Amazon Lightsail Ubuntu instance. With an apache server and a Flask application.
+
+The following are the necessary steps that were taken to configure the web app:
+
 # Get your server.
 ## 1. Start a new Ubuntu Linux server instance on Amazon Lightsail. 
 ## 2. Connect to instance using ssh
@@ -148,3 +155,10 @@ cd /var/www/FlaskApp/FlaskApp/static
 python /var/www/FlaskApp/FlaskApp/static/__init__.py
 
 sudo service apache2 restart
+
+## Third Party Resources
+* Google OAuth
+* Apache
+* Ubuntu
+* Flask
+* Amazon Lightsail
